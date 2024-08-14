@@ -1,1 +1,37 @@
+int distancia() {
+  digitalWrite(pinotrig, LOW);
+  digitalWrite(pinotrig, HIGH);
+  delayMicroseconds(8);
+  digitalWrite(pinotrig, LOW);
+  tempo = pulseIn(pinoecho, HIGH);
+  return tempo * 0.017;
+}
 
+bool IRs(bool irE, bool irD) {
+  if (irE == sinalIRE && irD == sinalIRD) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+void testes() {
+  if (distancia() == 0) {
+    Serial.println("✖ ultrassonico");
+    delay(200);
+  }
+  else {
+    Serial.println("✔ ultrassonico");
+    delay(200);  }
+}
+
+void printresultado() {
+  Serial.print("distancia: " + String(distancia()));
+  Serial.print("  IR: "+String(sinalIRE)+ ", "+String(sinalIRD));
+  if (IRs(1, 0) == true || IRs(0, 1) ==  true) {
+    Serial.println(", TORTO");
+  }
+  else {
+    Serial.println(", RETO");
+}
