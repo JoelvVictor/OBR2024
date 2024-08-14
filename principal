@@ -1,0 +1,66 @@
+#include <Servo.h>
+#include <DC_motor_controller.h>
+
+DC_motor_controller motE, motD;
+//OBR 2024 NIOBIUM
+int in1Direito = 5;
+int in2Direito = 6;
+int ENA_Direito = 5;
+int canalA_Direito = 2;
+int canalB_Direito = 4;
+int in1Esquerdo = 9;
+int in2Esquerdo = 10;
+int ENA_Esquerdo = 9;
+int canalA_Esquerdo = 3;
+int canalB_Esquerdo = 7;
+int pinotrig = 13;
+int pinoecho = 11;
+int sinalIRE = A1;
+int sinalIRD = A2;
+
+//auxiliares
+float distancia1;
+int tempo;
+
+void interrupt_motE() {
+  motE.isr(); }
+void interrupt_motD() {
+  motD.isr(); }
+
+void setup() {
+  motE.hBridge(in1Esquerdo, in2Esquerdo, ENA_Esquerdo);
+  motE.setEncoderPin(canalA_Esquerdo, canalB_Esquerdo);
+  attachInterrupt(digitalPinToInterrupt(canalA_Esquerdo), interrupt_motE, FALLING);
+  motE.setRR(45);
+  motE.setPins();
+
+  motD.hBridge(in1Direito, in2Direito, ENA_Direito);
+  motD.setEncoderPin(canalA_Direito, canalB_Direito);
+  attachInterrupt(digitalPinToInterrupt(canalA_Direito), interrupt_motD, FALLING);
+  motD.setRR(45);
+  motD.setPins();
+
+  pinMode(pinotrig, OUTPUT);
+  pinMode(pinoecho, INPUT);
+
+  Serial.begin(9600);
+  testes();
+  motE.walk(100);
+  motD.walk(100);
+}
+
+void loop() {
+  printresultado();
+  if (IRs(0, 0) == true) {
+    motE.walk(100);
+    motD.walk(100);
+  }
+  if (IRs(1, 0) == true) {
+    motE.walk(100);
+    motD.walk(50);
+  }
+  if (IRs(0, 1) == true) {
+    motD.walk(100);
+    motE.walk(50);
+  }
+}
