@@ -1,3 +1,4 @@
+
 int distancia() {
   digitalWrite(pinotrig, LOW);
   digitalWrite(pinotrig, HIGH);
@@ -7,8 +8,8 @@ int distancia() {
   return tempo * 0.017;
 }
 
-bool IRs(bool irE, bool irD) {
-  if (irE == sinalIRE && irD == sinalIRD) {
+bool IRs(bool irE, bool irC, bool irD) {
+  if (irE == sinalIRE && irC == sinalIRC && irD == sinalIRD) {
     return true;
   }
   else {
@@ -27,11 +28,15 @@ void testes() {
 }
 
 void printresultado() {
+  Serial.print("R: " + String(r));
+  Serial.print(" G " + String(g));
+  Serial.println(" B" + String(b));
   Serial.print("distancia: " + String(distancia()));
   Serial.print("  IR: "+String(sinalIRE)+ ", "+String(sinalIRD));
-  if (IRs(1, 0) == true || IRs(0, 1) ==  true) {
+  if (IRs(1, 1, 0) == true || IRs(0, 1, 1) ==  true) {
     Serial.println(", TORTO");
   }
   else {
     Serial.println(", RETO");
+  }
 }
