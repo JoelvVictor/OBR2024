@@ -1,5 +1,6 @@
 #include <Servo.h>
 #include <DC_motor_controller.h>
+#include <Arduino_APDS9960.h>
 
 DC_motor_controller motE, motD;
 //OBR 2024 NIOBIUM
@@ -8,15 +9,20 @@ int in2Direito = 6;
 int ENA_Direito = 5;
 int canalA_Direito = 2;
 int canalB_Direito = 4;
-int in1Esquerdo = 9;
-int in2Esquerdo = 10;
+int in1Esquerdo = 10;
+int in2Esquerdo = 9;
 int ENA_Esquerdo = 9;
 int canalA_Esquerdo = 3;
 int canalB_Esquerdo = 7;
 int pinotrig = 13;
 int pinoecho = 11;
-int sinalIRE = A1;
-int sinalIRD = A2;
+int pinoIRE = A1;
+int pinoIRD = A2;
+int pinoIRC = A5;
+int sinalIRE;
+int sinalIRC;
+int sinalIRD;
+int r, g, b;
 
 //auxiliares
 float distancia1;
@@ -50,17 +56,24 @@ void setup() {
 }
 
 void loop() {
+  APDS.readColor(r, g, b);
   printresultado();
-  if (IRs(0, 0) == true) {
+  if (IRs(0, 1, 0) == true) {
     motE.walk(100);
     motD.walk(100);
   }
-  if (IRs(1, 0) == true) {
-    motE.walk(100);
-    motD.walk(50);
-  }
-  if (IRs(0, 1) == true) {
-    motD.walk(100);
+  if (IRs(1, 1, 0) == true) {
     motE.walk(50);
+    motD.walk(100);
   }
+  if (IRs(0, 1, 1) == true) {
+    motD.walk(50);
+    motE.walk(100);
+  }
+  else {
+    motD.walk(100);
+    motE.walk(100);
+  }
+
+
 }
