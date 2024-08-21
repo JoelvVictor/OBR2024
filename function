@@ -9,6 +9,10 @@ int distancia() {
 }
 
 bool IRs(bool irE, bool irC, bool irD) {
+  sinalIRE = digitalRead(pinoIRE);
+  sinalIRC = digitalRead(pinoIRC);
+  sinalIRD = digitalRead(pinoIRD);
+
   if (irE == sinalIRE && irC == sinalIRC && irD == sinalIRD) {
     return true;
   }
