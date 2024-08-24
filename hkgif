@@ -1,0 +1,28 @@
+void testes() {
+  if (!vl.init())
+  {
+    Serial.println("Failed to detect and initialize sensor!");
+    while (1) {}
+  }
+}
+
+
+
+int distancia = vl.readRangeContinuousMillimeters();
+  printresultado();
+  if (IRs(0, 1, 0) == true) {
+    motE.walk(100);
+    motD.walk(100);
+  }
+  if (IRs(1, 1, 0) == true) {
+    motE.walk(50);
+    motD.walk(100);
+  }
+  if (IRs(0, 1, 1) == true) {
+    motD.walk(50);
+    motE.walk(100);
+  }
+  else {
+    motD.walk(100);
+    motE.walk(100);
+  }
