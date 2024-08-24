@@ -1,13 +1,4 @@
 
-int distancia() {
-  digitalWrite(pinotrig, LOW);
-  digitalWrite(pinotrig, HIGH);
-  delayMicroseconds(8);
-  digitalWrite(pinotrig, LOW);
-  tempo = pulseIn(pinoecho, HIGH);
-  return tempo * 0.017;
-}
-
 bool IRs(bool irE, bool irC, bool irD) {
   sinalIRE = digitalRead(pinoIRE);
   sinalIRC = digitalRead(pinoIRC);
@@ -21,21 +12,10 @@ bool IRs(bool irE, bool irC, bool irD) {
   }
 }
 
-void testes() {
-  if (distancia() == 0) {
-    Serial.println("✖ ultrassonico");
-    delay(200);
-  }
-  else {
-    Serial.println("✔ ultrassonico");
-    delay(200);  }
-}
+
 
 void printresultado() {
-  Serial.print("R: " + String(r));
-  Serial.print(" G " + String(g));
-  Serial.println(" B" + String(b));
-  Serial.print("distancia: " + String(distancia()));
+  Serial.print(vl.readRangeContinuousMillimeters());
   Serial.print("  IR: "+String(sinalIRE)+ ", "+String(sinalIRD));
   if (IRs(1, 1, 0) == true || IRs(0, 1, 1) ==  true) {
     Serial.println(", TORTO");
