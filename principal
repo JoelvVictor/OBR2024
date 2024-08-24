@@ -1,8 +1,17 @@
+#include <Wire.h>
+#include <VL53L0X.h>
 #include <Servo.h>
 #include <DC_motor_controller.h>
 #include <Arduino_APDS9960.h>
+#include <TwoMotors.h>
 
+Servo s1, s2, s3;
 DC_motor_controller motE, motD;
+TwoMotors motores(motE, motD);
+VL53L0X vl;
+
+int count = 0;
+
 //OBR 2024 NIOBIUM
 int in1Direito = 5;
 int in2Direito = 6;
@@ -10,35 +19,37 @@ int ENA_Direito = 5;
 int canalA_Direito = 2;
 int canalB_Direito = 4;
 int in1Esquerdo = 10;
-int in2Esquerdo = 9;
+int in2Esquerdo  =9;
 int ENA_Esquerdo = 9;
 int canalA_Esquerdo = 3;
 int canalB_Esquerdo = 7;
-int pinotrig = 13;
-int pinoecho = 11;
 int pinoIRE = A1;
 int pinoIRD = A2;
 int pinoIRC = A5;
 int sinalIRE;
 int sinalIRC;
 int sinalIRD;
-int r, g, b;
 
 //auxiliares
 float distancia1;
 int tempo;
 
 void interrupt_motE() {
-  motE.isr(); }
+  motE.isr();
+  count++; }
 void interrupt_motD() {
   motD.isr(); }
 
 void setup() {
+  s1.attach(A0);
+  s2.attach(A1);
+  s3.attach(A2);
   motE.hBridge(in1Esquerdo, in2Esquerdo, ENA_Esquerdo);
   motE.setEncoderPin(canalA_Esquerdo, canalB_Esquerdo);
   attachInterrupt(digitalPinToInterrupt(canalA_Esquerdo), interrupt_motE, FALLING);
   motE.setRR(45);
   motE.setPins();
+  motE.debugMaxVel();
 
   motD.hBridge(in1Direito, in2Direito, ENA_Direito);
   motD.setEncoderPin(canalA_Direito, canalB_Direito);
@@ -46,34 +57,14 @@ void setup() {
   motD.setRR(45);
   motD.setPins();
 
-  pinMode(pinotrig, OUTPUT);
-  pinMode(pinoecho, INPUT);
-
   Serial.begin(9600);
-  testes();
-  motE.walk(100);
-  motD.walk(100);
+  //motores.together(50, 2);
+  //motE.walk(10);
+  //motD.walk(50, 1);
 }
 
 void loop() {
-  APDS.readColor(r, g, b);
-  printresultado();
-  if (IRs(0, 1, 0) == true) {
-    motE.walk(100);
-    motD.walk(100);
-  }
-  if (IRs(1, 1, 0) == true) {
-    motE.walk(50);
-    motD.walk(100);
-  }
-  if (IRs(0, 1, 1) == true) {
-    motD.walk(50);
-    motE.walk(100);
-  }
-  else {
-    motD.walk(100);
-    motE.walk(100);
-  }
+  motE.run(
 
-
+  )
 }
